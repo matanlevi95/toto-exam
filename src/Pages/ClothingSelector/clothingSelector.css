@@ -1,0 +1,128 @@
+.clothing-selector-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.color-filter {
+  display: flex;
+  gap: 10px;
+}
+
+.color-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.color-circle:hover {
+  transform: scale(1.1);
+  border-color: #888;
+}
+
+.color-circle.selected {
+  border-color: #333;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+
+.size-filter {
+  display: flex;
+  gap: 10px;
+}
+
+.size-button {
+  padding: 8px 15px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.size-button:hover {
+  background-color: #f0f0f0;
+}
+
+.size-button.selected {
+  border-color: #333;
+  background-color: #e0e0e0;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.item-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-5px);
+}
+
+.item-image {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+}
+
+.item-brand {
+  font-size: 1.2rem;
+  color: #222;
+  margin: 10px 0 5px;
+}
+
+.item-info {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.select-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  margin: 15px 0;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.select-button:hover {
+  background-color: #45a049;
+}
+
+.no-items {
+  text-align: center;
+  color: #888;
+  font-size: 1.2rem;
+  margin-top: 50px;
+}
