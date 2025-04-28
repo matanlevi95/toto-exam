@@ -1,69 +1,107 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Color from "../../components/ClothingFilters/Color/color";
-import clothingData from "../../Data/data.json";
-import "./clothingSelector.css";
 import Size from "../../components/ClothingFilters/Size/size";
 import Item from "../../components/Item/item";
+import clothingData from "../../data/data.json";
+import { filterItems } from "../../utils/filterHandlers";
+import { handleSelectItem } from "../../utils/selectionHandlers";
+import { startNewSet } from "../../redux/clothingSetSlice";
+import "./clothingSelector.css";
 
-export default function ClothingSelector() {
+const ClothingSelector = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
-  const [colors, setColors] = useState([]);
-  const [sizes, setSizes] = useState([]);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
-  const clothingType = location.state?.type || "shirt";
+  const clothingType = location.state?.itemType || "shirt";
+
+  const currentSet = useSelector((state) => state.clothingSet.currentSet);
+  const { recommendedSizes, recommendedColors } = useSelector(
+    (state) => state.recommendations
+  );
 
   useEffect(() => {
     const filtered = clothingData.filter((item) => item.type === clothingType);
     setItems(filtered);
+    setSelectedColor("");
+    setSelectedSize("");
+
+    if (!currentSet.shirt && !currentSet.pants && !currentSet.shoes) {
+      dispatch(startNewSet());
+    }
+  }, [clothingType, dispatch]);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      filterAndSetItems(selectedColor, selectedSize);
+    }
+  }, [items, recommendedColors, recommendedSizes]);
+
+  const filterAndSetItems = (color, size) => {
+    let filtered = filterItems({
+      items,
+      clothingType,
+      recommendedColors,
+      recommendedSizes: clothingType === "shoes" ? [] : recommendedSizes,
+      color,
+      size,
+    });
+
+    if (filtered.length === 0) {
+      filtered = items;
+    }
+
     setFilteredItems(filtered);
+  };
 
-    const uniqueColors = [...new Set(filtered.map((item) => item.color))];
-    const uniqueSizes = [...new Set(filtered.map((item) => item.size))];
-
-    setColors(uniqueColors);
-    setSizes(uniqueSizes);
-  }, [clothingType]);
-
-  function handleColorSelect(color) {
+  const handleColorSelect = (color) => {
     const newColor = selectedColor === color ? "" : color;
     setSelectedColor(newColor);
-    filterItems(newColor, selectedSize);
-  }
+    filterAndSetItems(newColor, selectedSize);
+  };
 
-  function handleSizeSelect(size) {
-    const newSize = selectedSize === String(size) ? "" : String(size);
+  const handleSizeSelect = (size) => {
+    const newSize = selectedSize === size ? "" : size;
     setSelectedSize(newSize);
-    filterItems(selectedColor, newSize);
-  }
+    filterAndSetItems(selectedColor, newSize);
+  };
 
-  function filterItems(color, size) {
-    let filtered = items;
-    if (color) {
-      filtered = filtered.filter((item) => item.color === color);
-    }
-    if (size) {
-      filtered = filtered.filter((item) => String(item.size) === String(size));
-    }
-    setFilteredItems(filtered);
-  }
+  const handleSelect = (item) => {
+    handleSelectItem({ item, currentSet, dispatch, navigate });
+  };
 
-  function handleSelectItem(item) {
-    console.log("Selected item:", item);
+  const showingAllItems = filteredItems.length === items.length;
 
-    if (clothingType === "shirt") {
-      navigate("/clothing-selector", { state: { type: "pants" } });
-    } else if (clothingType === "pants") {
-      navigate("/clothing-selector", { state: { type: "shoes" } });
-    } else {
-      navigate("/");
-    }
-  }
+  const availableColorsInItems = useMemo(
+    () => [...new Set(filteredItems.map((item) => item.color))],
+    [filteredItems]
+  );
+
+  const availableSizesInItems = useMemo(
+    () => [...new Set(filteredItems.map((item) => String(item.size)))],
+    [filteredItems]
+  );
+
+  const displayedColors =
+    recommendedColors.length > 0 && !showingAllItems
+      ? availableColorsInItems.filter((color) =>
+          recommendedColors.includes(color)
+        )
+      : availableColorsInItems;
+
+  const displayedSizes =
+    recommendedSizes.length > 0 && clothingType !== "shoes" && !showingAllItems
+      ? availableSizesInItems.filter((size) =>
+          recommendedSizes.includes(String(size))
+        )
+      : availableSizesInItems;
 
   return (
     <div className="clothing-selector-container">
@@ -71,31 +109,47 @@ export default function ClothingSelector() {
 
       <div className="filters">
         <div className="color-filter">
-          {colors.map((color) => (
+          {displayedColors.map((color) => (
             <Color
+              key={color}
               color={color}
               isSelected={selectedColor === color}
+              isRecommended={recommendedColors.includes(color)}
               handleColorSelect={handleColorSelect}
             />
           ))}
         </div>
 
         <div className="size-filter">
-          {sizes.map((size) => (
+          {displayedSizes.map((size) => (
             <Size
+              key={size}
               size={size}
               isSelected={selectedSize === size}
+              isRecommended={recommendedSizes.includes(String(size))}
               handleSizeSelect={handleSizeSelect}
             />
           ))}
         </div>
       </div>
 
+      {!showingAllItems && filteredItems.length === items.length && (
+        <div className="info-message">
+          No perfect matches found. Showing all available items.
+        </div>
+      )}
+
       <div className="items-grid">
-        {filteredItems.map((item) => (
-          <Item item={item} handleSelectItem={handleSelectItem}/>
-        ))}
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item) => (
+            <Item key={item.id} item={item} handleSelectItem={handleSelect} />
+          ))
+        ) : (
+          <div className="no-results">No matching items found 😢</div>
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default ClothingSelector;

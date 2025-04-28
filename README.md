@@ -1,70 +1,97 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Clothing Set Builder 👕👖👟
 
-## Available Scripts
+## תיאור הפרויקט
 
-In the project directory, you can run:
+אפליקציית בניית סטים של פריטי לבוש (חולצה, מכנסיים ונעליים) מתוך מאגר מוצרים קיים.  
+המשתמש בוחר פריט אחד, והמערכת ממליצה לו על פריטים נוספים בהתבסס על התאמות גודל וצבע.  
+המשתמש שומר סטים, צופה בהם, ומנהל אותם בקלות.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## טכנולוגיות עיקריות
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React
+- Redux Toolkit
+- React Router
+- localStorage לשמירת סטים
+- CSS מותאם למובייל
+- Toastify להודעות הצלחה
+- שימוש ב-`useMemo` לאופטימיזציה
+- קוד מופרד ומודולרי (`handlers`, `selectors`, `reducers`)
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## הסבר כללי על מבנה האפליקציה
 
-### `npm run build`
+- **דף בית**:  
+  מציג מידע כללי על הארון (כמה חולצות, מכנסיים, נעליים), קישורים לסטים שמורים וכפתורי התחלת בניית סט חדש.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **בחירת פריט לבוש**:  
+  מציג את כל הפריטים מהסוג הנבחר עם אפשרות סינון לפי צבע ומידה.  
+  לאחר בחירה, ממשיך אוטומטית לפריט הבא הדרוש.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **מסך סטים שמורים**:  
+  מציג את כל הסטים שנבנו ושמורים. כולל תמונה, צבע, מידה, מותג וזמן בניית הסט.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## החלטות טכניות והסברים
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Redux Toolkit** לניהול סטייט — מאפשר לנהל את הסט הנוכחי והסטים השמורים בצורה ברורה ופשוטה, כולל פרסיסטנטיות בלוקאל סטורג'.
+- **מודולריות** — כל לוגיקה נפרדה לקבצי `utils`, כך שהקומפוננטות מתעסקות רק בהצגה (`presentation`) והלוגיקה בצד.
+- **סינון חכם** — במקום להעלים צבעים/מידות שלא רלוונטיים, מונעים אפשרות בחירה בפריטים שאין להם התאמה אמיתית.
+- **שימוש ב־useMemo** — חוסך חישובים מיותרים, במיוחד ברינדורים מרובים.
+- **שמירת סט** — רק כאשר כל 3 הפריטים נבחרים, נשמר סט מלא.
+- **המלצות לפי גודל וצבע** — מבוצעת התאמה דינאמית לפי גודל נעל/חולצה/מכנס והגדרות צבעים שהוגדרו ידנית.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## אלגוריתם המלצות גודל וצבע
 
-## Learn More
+### התאמת מידות:
+- אם המשתמש בחר חולצה במידה L ➔ יומלצו מכנסיים במידות מתאימות (למשל 32–34).
+- אם המשתמש בחר נעל במידה 45 ➔ יומלצו חולצות במידה XL/XXL.
+- המרה בין סוגי מידות בוצעה לפי טבלאות התאמה מותאמות אישית בקובץ `sizeMatcher.js`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### התאמת צבעים:
+- לפי צבע שנבחר, מוגדרים צבעים משלימים מועדפים. למשל:
+  - חולצה לבנה ➔ נעליים שחורות או כחולות.
+  - נעל אדומה ➔ מכנס שחור או לבן.
+- האלגוריתם מגדיר התאמות בקובץ `colorMatcher.js` ומציע בחירה נעימה ואסתטית לעין.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## הוראות התקנה והרצה
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. העתקה של הפרויקט:
+```bash
+git clone https://github.com/matanlevi95/toto-exam
+```
+2. התקנת חבילות:
+```bash
+npm install
+```
+3. הרצת הפרויקט:
+```bash
+npm start
+```
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## זמן עבודה נטו
 
-### Making a Progressive Web App
+**סך הכל הושקעו:** כ־10 שעות נטו  
+כולל תכנון, פיתוח, בדיקות, תיעוד ועיצוב מותאם מובייל.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## הערות נוספות
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- האפליקציה מותאמת למובייל.
+- הקוד כתוב באופן נקי ומודולרי, מוכן להרחבות עתידיות.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# 🏁 בהצלחה! תודה על ההזדמנות!

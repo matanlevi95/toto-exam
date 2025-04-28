@@ -42,13 +42,6 @@ export default function SideBar() {
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
-                  to="/clothing-builder"
-                  onClick={handleClose}
-                >
-                  Clothing Builder
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
                   to="/clothing-selector"
                   onClick={handleClose}
                 >

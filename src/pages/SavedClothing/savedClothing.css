@@ -1,0 +1,82 @@
+.saved-clothing-container {
+  padding: 16px;
+  background: #f6f8fa;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.sets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.clothing-set-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.clothing-set-card:hover {
+  transform: translateY(-4px);
+}
+
+.clothing-set-card h3 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #444;
+  text-align: center;
+}
+
+.clothing-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clothing-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid #eee;
+}
+
+.clothing-item:first-child {
+  border-top: none;
+}
+
+.item-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+}
+
+.item-details p {
+  margin: 2px 0;
+  color: #555;
+}
+
+.no-results {
+  text-align: center;
+  font-size: 18px;
+  color: #999;
+  margin-top: 40px;
+}
